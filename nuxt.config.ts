@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -16,14 +16,14 @@ export default defineNuxtConfig({
       '@nuxtjs/google-fonts',
       {
         families: {
-          Inter: [300, 400, 500, 600, 700, 800, 900],
+          Inter: [300, 400, 500, 600, 700, 800, 900]
         },
-        display: 'swap',
-      },
-    ],
+        display: 'swap'
+      }
+    ]
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss()]
   },
   colorMode: {
     classSuffix: '',
@@ -33,6 +33,6 @@ export default defineNuxtConfig({
     dataValue: '',
     globalName: 'colorMode',
     storageKey: 'nuxt-color-mode',
-    storage: 'localStorage',
-  },
+    storage: 'localStorage'
+  }
 })

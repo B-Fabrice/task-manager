@@ -1,17 +1,16 @@
 <script setup>
-import { Moon, Sun, System } from "./icons/index.ts";
-
-const colorMode = useColorMode();
-const themeValue = computed(() => colorMode.value);
+import { Moon, Sun, System } from './icons/index.js'
+const colorMode = useColorMode()
+const themeValue = computed(() => colorMode.value)
 const toggleTheme = () => {
-  if (colorMode.value === "dark") {
-    colorMode.value = "light";
-  } else if (colorMode.value === "light") {
-    colorMode.value = "system";
+  if (colorMode.value === 'dark') {
+    colorMode.value = 'light'
+  } else if (colorMode.value === 'light') {
+    colorMode.value = 'system'
   } else {
-    colorMode.value = "dark";
+    colorMode.value = 'dark'
   }
-};
+}
 </script>
 
 <template>
@@ -39,11 +38,11 @@ const toggleTheme = () => {
             <System v-else />
           </button>
 
-          <button
-            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
+          <AppButton
+            variant="primary"
           >
             Login
-          </button>
+          </AppButton>
         </div>
       </div>
     </div>
