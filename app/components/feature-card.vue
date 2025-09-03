@@ -11,7 +11,7 @@ defineProps<{
     <div
       class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-6"
     >
-    {{ feature.icon }}
+  <component :is="feature.icon" />
     </div>
     <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
       {{ feature.title }}

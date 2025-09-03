@@ -1,23 +1,21 @@
-<script lang="tsx" setup>
+<script lang="ts" setup>
 import Navbar from "../components/navbar.vue";
 import Footer from "../components/footer.vue";
 import FeatureCard from "../components/feature-card.vue";
 
-import {
-  Past,
-  Team,
-  Progress,
-  Mobile,
-  Security,
-  Flash,
-} from "../components/icons/index.ts";
+import Past from "../components/icons/past.vue";
+import Team from "../components/icons/team.vue";
+import Progress from "../components/icons/progress.vue";
+import Mobile from "../components/icons/mobile.vue";
+import Security from "../components/icons/security.vue";
+import Flash from "../components/icons/flash.vue";
 
 const features = [
   {
     title: "Smart Task Organization",
     description:
       "Organize tasks with custom categories, priorities, and due dates. Never miss a deadline again.",
-    icon: <Past />,
+    icon: Past,
   },
   {
     title: "Team Collaboration",
