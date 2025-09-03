@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@nuxt/scripts',
     '@nuxt/test-utils',
     '@nuxt/ui',
+    '@nuxtjs/color-mode',
     [
       '@nuxtjs/google-fonts',
       {
@@ -23,5 +24,15 @@ export default defineNuxtConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+  },
+  colorMode: {
+    classSuffix: '',
+    classPrefix: '',
+    preference: 'system',
+    fallback: 'light',
+    dataValue: '',
+    globalName: 'colorMode',
+    storageKey: 'nuxt-color-mode',
+    storage: 'localStorage',
   },
 })

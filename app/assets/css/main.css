@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.scheme-dark, .dark, .dark *));
+
 * {
   @apply transition-colors duration-300 ease-in-out;
 }
