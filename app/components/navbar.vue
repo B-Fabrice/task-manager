@@ -21,9 +21,11 @@ const toggleTheme = () => {
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              TaskFlow
-            </h1>
+            <NuxtLink to="/">
+              <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                TaskFlow
+              </h1>
+            </NuxtLink>
           </div>
         </div>
         <div class="flex items-center space-x-4">
@@ -38,11 +40,13 @@ const toggleTheme = () => {
             <System v-else />
           </button>
 
-          <AppButton
-            variant="primary"
-          >
-            Login
-          </AppButton>
+          <NuxtLink to="/login">
+            <AppButton
+              variant="primary"
+            >
+              Login
+            </AppButton>
+          </NuxtLink>
         </div>
       </div>
     </div>

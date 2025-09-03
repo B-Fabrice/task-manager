@@ -164,7 +164,9 @@ useHead({
           <div
             class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up"
           >
-            <AppButton variant="primary" large> Get Started Free </AppButton>
+            <NuxtLink to="/login">
+              <AppButton variant="primary" large> Get Started Free </AppButton>
+            </NuxtLink>
             <AppButton variant="outline" large> Watch Demo </AppButton>
           </div>
         </div>
@@ -211,7 +213,9 @@ useHead({
         <div
           class="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <AppButton variant="secondary" large> Start Free Trial </AppButton>
+          <NuxtLink to="/login">
+            <AppButton variant="secondary" large> Start Free Trial </AppButton>
+          </NuxtLink>
           <AppButton variant="white" large> Contact Sales </AppButton>
         </div>
       </div>
