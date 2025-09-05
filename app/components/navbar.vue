@@ -48,6 +48,10 @@ const toggleTheme = () => {
               {{ authStore.isAuthenticated ? 'Dashboard' : 'Login' }}
             </AppButton>
           </NuxtLink>
+          <!-- logout button  -->
+          <AppButton v-if="authStore.isAuthenticated" variant="outline" @click="authStore.logout()">
+            Logout
+          </AppButton>
         </div>
       </div>
     </div>
