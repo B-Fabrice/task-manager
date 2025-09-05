@@ -276,8 +276,7 @@ For support and questions:
 
 Watch the application in action:
 
-<video controls src="video_preview.pm4" title="Title"></video>
-
+<video controls src="video_preview.mp4" title="Title"></video>
 *Note: This video demonstrates the key features including authentication, task management, AI integration, and the responsive design.*
 
 ---
