@@ -278,7 +278,7 @@ Watch the application in action:
 
 <video controls src="https://firebasestorage.googleapis.com/v0/b/labource-70b84.firebasestorage.app/o/video_preview.mp4?alt=media&token=65838438-39ba-4578-b62f-74286436b512" title="Title"></video>
 <video controls src="video_preview.mov" title="Title"></video>
-*Note: This video demonstrates the key features including authentication, task management, AI integration, and the responsive design.*
+[Video](https://firebasestorage.googleapis.com/v0/b/labource-70b84.firebasestorage.app/o/video_preview.mp4?alt=media&token=65838438-39ba-4578-b62f-74286436b512)
 
 ---
 
