@@ -1,6 +1,7 @@
 <script setup>
 import { Moon, Sun, System } from './icons/index.js'
 const colorMode = useColorMode()
+const authStore = useAuthStore()
 const themeValue = computed(() => colorMode.value)
 const toggleTheme = () => {
   if (colorMode.value === 'dark') {
@@ -40,11 +41,11 @@ const toggleTheme = () => {
             <System v-else />
           </button>
 
-          <NuxtLink to="/login">
+          <NuxtLink :to="authStore.isAuthenticated ? '/dashboard' : '/login'">
             <AppButton
               variant="primary"
             >
-              Login
+              {{ authStore.isAuthenticated ? 'Dashboard' : 'Login' }}
             </AppButton>
           </NuxtLink>
         </div>

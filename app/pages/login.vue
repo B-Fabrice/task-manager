@@ -1,19 +1,17 @@
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { Loading } from '../components/icons/index.js'
+<script setup>
 
 // Form data
-const email = ref('')
-const password = ref('')
-const isLoading = ref(false)
+const email = ref('user@taskflow.com')
+const password = ref('user123')
+const formError = ref('')
+const authStore = useAuthStore()
 
 // Form validation
 const emailError = ref('')
 const passwordError = ref('')
-const formError = ref('')
 
 // Validation functions
-const validateEmail = (email: string) => {
+const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
@@ -47,27 +45,30 @@ const validateForm = () => {
 // Handle form submission
 const handleLogin = async () => {
   if (!validateForm()) return
+
+  console.log('Login button clicked: ', authStore.user)
   
-  isLoading.value = true
+  const result = await authStore.login(email.value, password.value)
+  console.log(result)
   
-  try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Here you would typically make an API call to authenticate
-    console.log('Login attempt:', { email: email.value, password: password.value })
-    
-    // Redirect to dashboard or show success message
-    // await navigateTo('/dashboard')
-    
-  } catch (error) {
-    console.error('Login error:', error)
-  } finally {
-    isLoading.value = false
+  if (result?.success) {
+    await navigateTo('/dashboard')
+  } else {
+    formError.value = result?.error || 'Login failed'
   }
 }
 
-// SEO Meta tags
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        return navigateTo('/dashboard')
+      }
+    }
+  ]
+})
+
 useHead({
   title: 'Login - TaskFlow',
   meta: [
@@ -76,6 +77,8 @@ useHead({
   ]
 })
 </script>
+
+<script setup></script>
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
@@ -123,19 +126,19 @@ useHead({
             />
 
             <!-- Login Button -->
-            <AppButton
-              type="submit"
-              :disabled="isLoading"
-              variant="primary"
-              large
-              full
-            >
-              <span v-if="isLoading" class="flex items-center justify-center">
-                <Loading />
-                Signing In...
-              </span>
-              <span v-else>Sign In</span>
-            </AppButton>
+                         <AppButton
+               type="submit"
+               :disabled="authStore.isLoading"
+               variant="primary"
+               large
+               full
+             >
+               <span v-if="authStore.isLoading" class="flex items-center justify-center">
+                 <Loading />
+                 Signing In...
+               </span>
+               <span v-else>Sign In</span>
+             </AppButton>
             <p v-if="formError" class="mt-1 text-sm text-red-600 dark:text-red-400 text-center">
                 {{ formError }}
             </p>

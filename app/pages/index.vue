@@ -46,6 +46,7 @@ const features = [
     icon: Flash
   }
 ]
+
 useHead({
   title: 'TaskFlow - Modern Task Management Platform',
   meta: [
@@ -225,6 +226,3 @@ useHead({
     <AppFooter />
   </div>
 </template>
-
-
-

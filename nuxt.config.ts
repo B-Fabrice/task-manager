@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
     '@nuxtjs/color-mode',
+    '@pinia/nuxt',
     [
       '@nuxtjs/google-fonts',
       {
@@ -34,5 +35,8 @@ export default defineNuxtConfig({
     globalName: 'colorMode',
     storageKey: 'nuxt-color-mode',
     storage: 'localStorage'
-  }
+  },
+  plugins: [
+    '~/plugins/auth.client'
+  ]
 })

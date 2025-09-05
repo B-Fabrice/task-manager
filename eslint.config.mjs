@@ -1,12 +1,13 @@
 // @ts-check
-import withNuxt from "./.nuxt/eslint.config.mjs";
+import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt({
   rules: {
-    indent: ["error", 2],
-    semi: ["error", "never"],
-    quotes: ["error", "single"],
-    "comma-dangle": ["error", "never"],
-    "jsx-quotes": ["error", "prefer-single"],
-  },
-});
+    indent: ['error', 2],
+    semi: ['error', 'never'],
+    quotes: ['error', 'single'],
+    'comma-dangle': ['error', 'never'],
+    'jsx-quotes': ['error', 'prefer-single'],
+    '@typescript-eslint/no-explicit-any': 'off'
+  }
+})
