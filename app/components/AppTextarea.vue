@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import AI from './icons/AI.vue'
+import { onUnmounted } from 'vue'
+import { useAI } from '../composables/useAI'
 
 interface Props {
   id?: string
@@ -39,7 +41,6 @@ const handleAIGenerate = async () => {
   }
 }
 
-// Clear AI error when component unmounts
 onUnmounted(() => {
   clearError()
 })

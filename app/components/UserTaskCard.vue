@@ -4,7 +4,10 @@
       <!-- Header -->
       <div class="flex items-start justify-between mb-4">
         <div class="flex-1">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 
+            class="text-lg font-semibold text-gray-900 dark:text-white mb-2 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+            @click="$emit('view', task)"
+          >
             {{ task.title }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-1">
@@ -27,15 +30,15 @@
         <div class="flex items-center">
           <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
             <span class="text-sm font-medium text-purple-600 dark:text-purple-400">
-              {{ task.createdByUser.firstName[0] }}{{ task.createdByUser.lastName[0] }}
+              {{ task.createdByUser?.firstName?.[0] }}{{ task.createdByUser?.lastName?.[0] }}
             </span>
           </div>
           <div>
             <p class="text-sm font-medium text-gray-900 dark:text-white">
-              Created by {{ task.createdByUser.firstName }} {{ task.createdByUser.lastName }}
+              Created by {{ task.createdByUser?.firstName }} {{ task.createdByUser?.lastName }}
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              {{ task.createdByUser.email }}
+              {{ task.createdByUser?.email }}
             </p>
           </div>
         </div>
@@ -74,9 +77,9 @@
           <button
             v-for="status in availableStatuses"
             :key="status"
-            @click="$emit('updateStatus', task, status)"
             class="px-3 py-1 text-xs rounded-md transition-colors duration-200"
             :class="getStatusButtonClasses(status)"
+            @click="$emit('updateStatus', task, status)"
           >
             {{ status }}
           </button>
@@ -114,6 +117,7 @@ const props = defineProps<Props>()
 
 defineEmits<{
   updateStatus: [task: Task, status: string]
+  view: [task: Task]
 }>()
 
 const statusClasses = computed(() => {

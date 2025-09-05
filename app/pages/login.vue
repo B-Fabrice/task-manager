@@ -1,8 +1,8 @@
 <script setup>
 
 // Form data
-const email = ref('admin@taskflow.com')
-const password = ref('admin123')
+const email = ref('')
+const password = ref('')
 const formError = ref('')
 const authStore = useAuthStore()
 

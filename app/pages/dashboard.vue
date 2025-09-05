@@ -19,6 +19,10 @@ useHead({
   ]
 })
 
+// Modal state
+const showTaskModal = ref(false)
+const selectedTask = ref(null)
+
 // Fetch user tasks on mount
 onMounted(async () => {
   await userTasksStore.fetchMyTasks()
@@ -69,6 +73,16 @@ const handleUpdateStatus = async (task, newStatus) => {
   } catch (error) {
     console.error('Error updating task status:', error)
   }
+}
+
+const handleViewTask = (task) => {
+  selectedTask.value = task
+  showTaskModal.value = true
+}
+
+const closeTaskModal = () => {
+  showTaskModal.value = false
+  selectedTask.value = null
 }
 
 // Clear error when component unmounts
@@ -209,11 +223,19 @@ onUnmounted(() => {
                 :key="task.id"
                 :task="task"
                 @update-status="handleUpdateStatus"
+                @view="handleViewTask"
               />
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Task Details Modal -->
+    <TaskDetailsModal
+      :is-open="showTaskModal"
+      :task="selectedTask"
+      @close="closeTaskModal"
+    />
   </div>
 </template>
