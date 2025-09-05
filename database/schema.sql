@@ -27,8 +27,31 @@ CREATE TABLE refresh_tokens (
 
 -- Sample admin user (password: admin123)
 INSERT INTO users (email, password_hash, role, first_name, last_name) VALUES 
-('admin@taskflow.com', '$2b$10$rQZ8K9vX2mN3pL4qR5sT6uV7wX8yZ9aB0cD1eF2gH3iJ4kL5mN6oP7qR8sT9uV', 'admin', 'Admin', 'User');
+('admin@taskflow.com', '$2b$10$8i6XVkGf2c/KfyV0fB0pbu5EVXEMPT3QqlOSj0eBV5nqS6sxH4j.6', 'admin', 'Admin', 'User');
 
 -- Sample regular user (password: user123)
 INSERT INTO users (email, password_hash, role, first_name, last_name) VALUES 
 ('user@taskflow.com', '$2b$10$Zci08aU1DRwvVIUM0K4Kguum3Mbs9Jti.wiKURVq4e0adMjzRiRwu', 'user', 'Regular', 'User');
+
+-- Tasks table
+CREATE TABLE tasks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status ENUM('To Do', 'In Progress', 'In Review', 'Completed') DEFAULT 'To Do',
+    assigned_to INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deadline TIMESTAMP NULL,
+    created_by INT NOT NULL,
+    FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Sample tasks
+INSERT INTO tasks (title, description, status, assigned_to, created_by, deadline) VALUES 
+('Design System Update', 'Update the design system with new color palette and typography guidelines', 'In Progress', 2, 1, DATE_ADD(NOW(), INTERVAL 7 DAY)),
+('API Documentation', 'Create comprehensive API documentation for all endpoints', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 14 DAY)),
+('User Authentication', 'Implement OAuth2 authentication flow', 'Completed', 2, 1, DATE_ADD(NOW(), INTERVAL -5 DAY)),
+('Database Optimization', 'Optimize database queries and add proper indexing', 'In Review', 1, 1, DATE_ADD(NOW(), INTERVAL 3 DAY)),
+('Mobile Responsiveness', 'Ensure all components are mobile responsive', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 10 DAY));

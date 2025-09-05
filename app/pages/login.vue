@@ -1,8 +1,8 @@
 <script setup>
 
 // Form data
-const email = ref('user@taskflow.com')
-const password = ref('user123')
+const email = ref('admin@taskflow.com')
+const password = ref('admin123')
 const formError = ref('')
 const authStore = useAuthStore()
 
@@ -46,13 +46,11 @@ const validateForm = () => {
 const handleLogin = async () => {
   if (!validateForm()) return
 
-  console.log('Login button clicked: ', authStore.user)
-  
   const result = await authStore.login(email.value, password.value)
   console.log(result)
   
   if (result?.success) {
-    await navigateTo('/dashboard')
+    await navigateTo( authStore.isAdmin ? '/admin' : '/dashboard')
   } else {
     formError.value = result?.error || 'Login failed'
   }
@@ -63,7 +61,7 @@ definePageMeta({
     function (to, from) {
       const authStore = useAuthStore()
       if (authStore.isAuthenticated) {
-        return navigateTo('/dashboard')
+        return navigateTo( authStore.isAdmin ? '/admin' : '/dashboard')
       }
     }
   ]

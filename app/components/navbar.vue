@@ -30,7 +30,7 @@ const toggleTheme = () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <!-- Theme Switcher -->
+
           <button
             class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 active:scale-95"
             :title="currentTheme"
@@ -41,7 +41,7 @@ const toggleTheme = () => {
             <System v-else />
           </button>
 
-          <NuxtLink :to="authStore.isAuthenticated ? '/dashboard' : '/login'">
+          <NuxtLink :to="authStore.isAuthenticated ? authStore.isAdmin ? '/admin' : '/dashboard' : '/login'">
             <AppButton
               variant="primary"
             >

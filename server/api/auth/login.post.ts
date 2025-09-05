@@ -33,6 +33,8 @@ export default defineEventHandler(async (event) => {
       [email]
     )
 
+    // console.log(await bcrypt.hash(password, 10))
+
     if (!Array.isArray(users) || users.length === 0) {
       await connection.end()
       throw createError({
