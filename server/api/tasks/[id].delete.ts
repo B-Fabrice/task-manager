@@ -67,9 +67,15 @@ export default defineEventHandler(async (event) => {
 
 async function getUserFromSession(event: any) {
   console.log('event', event)
-  return {
-    id: 1,
-    email: 'admin@taskflow.com',
-    role: 'admin'
-  }
+  
+  // Mock different users for testing
+  const mockUsers = [
+    { id: 1, email: 'admin@taskflow.com', role: 'admin' },
+    { id: 2, email: 'user@taskflow.com', role: 'user' }
+  ]
+  
+  // For testing, return user 2 (regular user) for my-tasks endpoint
+  // and user 1 (admin) for other endpoints
+  const isMyTasksEndpoint = event.node.req.url?.includes('/my-tasks')
+  return isMyTasksEndpoint ? mockUsers[1] : mockUsers[0]
 }

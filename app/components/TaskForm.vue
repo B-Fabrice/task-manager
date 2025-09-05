@@ -170,7 +170,6 @@ const errors = ref({
   assignedTo: ''
 })
 
-// Reset form when modal opens/closes or task changes
 watch([() => props.isOpen, () => props.task], () => {
   if (props.isOpen) {
     if (props.task) {
@@ -215,11 +214,9 @@ const validateForm = () => {
 const handleSubmit = () => {
   if (!validateForm()) return
 
-  // Handle deadline formatting
   let formattedDeadline = null
   if (formData.value.deadline) {
-    // datetime-local input gives us YYYY-MM-DDTHH:MM format
-    // We need to ensure it's treated as local time and convert to ISO
+    
     const localDate = new Date(formData.value.deadline)
     formattedDeadline = localDate.toISOString()
   }

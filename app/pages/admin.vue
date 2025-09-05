@@ -18,7 +18,6 @@ useHead({
   ]
 })
 
-// Check if user is admin
 if (!authStore.isAdmin) {
   throw createError({
     statusCode: 403,
@@ -26,13 +25,11 @@ if (!authStore.isAdmin) {
   })
 }
 
-// State
 const showTaskForm = ref(false)
 const editingTask = ref(null)
 const deletingTask = ref(null)
 const showDeleteConfirm = ref(false)
 
-// Fetch data on mount
 onMounted(async () => {
   await Promise.all([
     tasksStore.fetchTasks(),
@@ -40,7 +37,6 @@ onMounted(async () => {
   ])
 })
 
-// Computed
 const stats = computed(() => [
   {
     icon: List,
@@ -77,7 +73,6 @@ const filteredTasks = computed(() => tasksStore.filteredTasks)
 const isLoading = computed(() => tasksStore.isLoading)
 const error = computed(() => tasksStore.error)
 
-// Methods
 const openCreateTask = () => {
   editingTask.value = null
   showTaskForm.value = true
@@ -135,7 +130,6 @@ const handleFiltersUpdate = (filters) => {
   tasksStore.setFilters(filters)
 }
 
-// Clear error when component unmounts
 onUnmounted(() => {
   tasksStore.clearError()
 })

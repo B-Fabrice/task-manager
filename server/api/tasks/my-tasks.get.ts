@@ -1,22 +1,7 @@
 import { createConnection } from 'mysql2/promise'
-import bcrypt from 'bcrypt'
 
 export default defineEventHandler(async (event) => {
   try {
-    const body = await readBody(event)
-    const { title, description, status, assignedTo, deadline } = body
-    
-    console.log('Received deadline:', deadline)
-    console.log('Deadline type:', typeof deadline)
-
-    // Validate required fields
-    if (!title || !status) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Title and status are required'
-      })
-    }
-
     // Get user from session/token
     const user = await getUserFromSession(event)
     if (!user) {
@@ -33,29 +18,6 @@ export default defineEventHandler(async (event) => {
       database: process.env.DB_NAME || 'taskflow'
     })
 
-    // Format deadline for MySQL
-    let formattedDeadline = null
-    if (deadline) {
-      const date = new Date(deadline)
-      // Convert to MySQL DATETIME format (YYYY-MM-DD HH:MM:SS)
-      formattedDeadline = date.getFullYear() + '-' +
-        String(date.getMonth() + 1).padStart(2, '0') + '-' +
-        String(date.getDate()).padStart(2, '0') + ' ' +
-        String(date.getHours()).padStart(2, '0') + ':' +
-        String(date.getMinutes()).padStart(2, '0') + ':' +
-        String(date.getSeconds()).padStart(2, '0')
-    }
-    console.log('Formatted deadline for MySQL:', formattedDeadline)
-
-    const [result] = await connection.execute(
-      `INSERT INTO tasks (title, description, status, assigned_to, deadline, created_by) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, description || '', status, assignedTo || null, formattedDeadline, user.id]
-    )
-
-    const taskId = (result as any).insertId
-
-    // Fetch the created task with user details
     const [tasks] = await connection.execute(`
       SELECT 
         t.id,
@@ -76,13 +38,13 @@ export default defineEventHandler(async (event) => {
       FROM tasks t
       LEFT JOIN users assigned_user ON t.assigned_to = assigned_user.id
       LEFT JOIN users created_user ON t.created_by = created_user.id
-      WHERE t.id = ?
-    `, [taskId])
+      WHERE t.assigned_to = ?
+      ORDER BY t.created_at DESC
+    `, [user.id])
 
     await connection.end()
 
-    const task = (tasks as any[])[0]
-    const formattedTask = {
+    const formattedTasks = (tasks as any[]).map(task => ({
       id: task.id,
       title: task.title,
       description: task.description,
@@ -104,25 +66,24 @@ export default defineEventHandler(async (event) => {
         lastName: task.created_last_name,
         email: task.created_email
       }
-    }
+    }))
 
     return {
       success: true,
-      task: formattedTask
+      tasks: formattedTasks
     }
-  } catch (error: any) {
-    console.error('Error creating task:', error)
-    if (error.statusCode) {
-      throw error
-    }
+  } catch (error) {
+    console.error('Error fetching user tasks:', error)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to create task'
+      statusMessage: 'Failed to fetch user tasks'
     })
   }
 })
 
 async function getUserFromSession(event: any) {
+  // This would typically extract user from JWT token
+  // For now, we'll return a mock user based on the request
   console.log('event', event)
   
   // Mock different users for testing
@@ -131,8 +92,6 @@ async function getUserFromSession(event: any) {
     { id: 2, email: 'user@taskflow.com', role: 'user' }
   ]
   
-  // For testing, return user 2 (regular user) for my-tasks endpoint
-  // and user 1 (admin) for other endpoints
-  const isMyTasksEndpoint = event.node.req.url?.includes('/my-tasks')
-  return isMyTasksEndpoint ? mockUsers[1] : mockUsers[0]
+  // For now, return user 2 (regular user) for testing
+  return mockUsers[1]
 }

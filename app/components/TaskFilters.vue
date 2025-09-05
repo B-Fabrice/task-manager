@@ -129,12 +129,10 @@ const emit = defineEmits<{
 
 const localFilters = ref<TaskFilters>({ ...props.filters })
 
-// Watch for changes and emit updates
 watch(localFilters, (newFilters) => {
   emit('update:filters', { ...newFilters })
 }, { deep: true })
 
-// Watch for external changes
 watch(() => props.filters, (newFilters) => {
   localFilters.value = { ...newFilters }
 }, { deep: true })

@@ -54,4 +54,7 @@ INSERT INTO tasks (title, description, status, assigned_to, created_by, deadline
 ('API Documentation', 'Create comprehensive API documentation for all endpoints', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 14 DAY)),
 ('User Authentication', 'Implement OAuth2 authentication flow', 'Completed', 2, 1, DATE_ADD(NOW(), INTERVAL -5 DAY)),
 ('Database Optimization', 'Optimize database queries and add proper indexing', 'In Review', 1, 1, DATE_ADD(NOW(), INTERVAL 3 DAY)),
-('Mobile Responsiveness', 'Ensure all components are mobile responsive', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 10 DAY));
+('Mobile Responsiveness', 'Ensure all components are mobile responsive', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 10 DAY)),
+('Frontend Testing', 'Write unit tests for React components', 'In Progress', 2, 1, DATE_ADD(NOW(), INTERVAL 5 DAY)),
+('Code Review', 'Review pull requests from the development team', 'To Do', 2, 1, DATE_ADD(NOW(), INTERVAL 2 DAY)),
+('Performance Audit', 'Analyze and improve application performance', 'In Review', 2, 1, DATE_ADD(NOW(), INTERVAL 1 DAY));

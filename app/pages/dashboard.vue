@@ -1,5 +1,8 @@
 <script setup>
+import { List, Done, Process, Chatting, Archive, Info } from '@/components/icons/index.js'
+
 const authStore = useAuthStore()
+const userTasksStore = useUserTasksStore()
 
 definePageMeta({
   middleware: 'auth'
@@ -14,6 +17,63 @@ useHead({
     },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
+})
+
+// Fetch user tasks on mount
+onMounted(async () => {
+  await userTasksStore.fetchMyTasks()
+})
+
+// Computed
+const stats = computed(() => [
+  {
+    icon: List,
+    title: 'My Tasks',
+    value: userTasksStore.taskStats.total,
+    color: 'blue'
+  },
+  {
+    icon: Done,
+    title: 'Completed',
+    value: userTasksStore.taskStats.completed,
+    color: 'green'
+  },
+  {
+    icon: Process,
+    title: 'In Progress',
+    value: userTasksStore.taskStats.inProgress,
+    color: 'yellow'
+  },
+  {
+    icon: Chatting,
+    title: 'In Review',
+    value: userTasksStore.taskStats.inReview,
+    color: 'purple'
+  },
+  {
+    icon: Archive,
+    title: 'To Do',
+    value: userTasksStore.taskStats.toDo,
+    color: 'gray'
+  }
+])
+
+const tasks = computed(() => userTasksStore.tasks)
+const isLoading = computed(() => userTasksStore.isLoading)
+const error = computed(() => userTasksStore.error)
+
+// Methods
+const handleUpdateStatus = async (task, newStatus) => {
+  try {
+    await userTasksStore.updateTaskStatus(task.id, newStatus)
+  } catch (error) {
+    console.error('Error updating task status:', error)
+  }
+}
+
+// Clear error when component unmounts
+onUnmounted(() => {
+  userTasksStore.clearError()
 })
 </script>
 
@@ -32,7 +92,7 @@ useHead({
             Welcome back, {{ authStore.fullName }}!
           </h1>
           <p class="text-lg text-gray-600 dark:text-gray-300">
-            Here's what's happening with your tasks today.
+            Here are your assigned tasks and progress.
           </p>
         </div>
 
@@ -75,109 +135,50 @@ useHead({
           </div>
         </div>
 
+        <!-- Error Alert -->
+        <div v-if="error" class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div class="flex">
+            <Info />
+            <p class="text-sm text-red-700 dark:text-red-400">{{ error }}</p>
+            <button class="ml-auto text-red-400 hover:text-red-600" @click="userTasksStore.clearError()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <!-- Quick Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700"
-          >
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+          <div v-for="stat in stats" :key="stat.title" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-              <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <svg
-                  class="w-6 h-6 text-blue-600 dark:text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                  />
-                </svg>
+              <div class="p-2 rounded-lg" :class="`bg-${stat.color}-100 dark:bg-${stat.color}-900`">
+                <component :is="stat.icon" class="w-6 h-6" :class="`text-${stat.color}-600 dark:text-${stat.color}-400`" />
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                  Total Tasks
-                </p>
-                <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-                  12
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700"
-          >
-            <div class="flex items-center">
-              <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-                <svg
-                  class="w-6 h-6 text-green-600 dark:text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                  Completed
-                </p>
-                <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-                  8
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700"
-          >
-            <div class="flex items-center">
-              <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                <svg
-                  class="w-6 h-6 text-yellow-600 dark:text-yellow-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                  In Progress
-                </p>
-                <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-                  4
-                </p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ stat.title }}</p>
+                <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ stat.value }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Recent Tasks -->
-        <div
-          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700"
-        >
+        <!-- My Tasks -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
           <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-              Recent Tasks
+              My Assigned Tasks
             </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+              Tasks assigned to you. You can update the status but cannot complete tasks (admin only).
+            </p>
           </div>
-          <div class="p-6">
+          
+          <div v-if="isLoading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+
+          <div v-else-if="tasks.length === 0" class="p-6">
             <div class="text-center py-12">
               <svg
                 class="mx-auto h-12 w-12 text-gray-400"
@@ -192,17 +193,23 @@ useHead({
                   d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                 />
               </svg>
-              <h3
-                class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                No tasks yet
+              <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                No tasks assigned
               </h3>
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Get started by creating your first task.
+                You don't have any tasks assigned to you yet.
               </p>
-              <div class="mt-6">
-                <AppButton variant="primary"> Create Task </AppButton>
-              </div>
+            </div>
+          </div>
+
+          <div v-else class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              <UserTaskCard
+                v-for="task in tasks"
+                :key="task.id"
+                :task="task"
+                @update-status="handleUpdateStatus"
+              />
             </div>
           </div>
         </div>
