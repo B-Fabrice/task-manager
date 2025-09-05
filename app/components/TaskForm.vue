@@ -38,18 +38,15 @@
           </div>
 
           <!-- Description -->
-          <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Description
-            </label>
-            <textarea
-              id="description"
-              v-model="formData.description"
-              rows="4"
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter task description..."
-            />
-          </div>
+          <AppTextarea
+            id="description"
+            v-model="formData.description"
+            label="Description"
+            placeholder="Enter task description..."
+            :rows="4"
+            :show-ai-generator="!isEditing"
+            :ai-title="formData.title"
+          />
 
           <!-- Status and Assignment Row -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

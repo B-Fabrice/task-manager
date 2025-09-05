@@ -36,6 +36,9 @@ DB_NAME=taskflow
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production
 
+# AI Configuration
+GEMINI_API_KEY=your-gemini-api-key-here
+
 # Environment
 NODE_ENV=development
 ```
